@@ -107,6 +107,119 @@ namespace FuelCalc
             result.ReadOnly = true;
             this.Controls.Add(result);
         }
+
+        private bool nonNumberEntered = false;
+
+        private void TxtBxSecond_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (nonNumberEntered == true)
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void TxtBxFirst_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (nonNumberEntered == true)
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void btnCalc_Click(object sender, EventArgs e)
+        {
+            if (txtBxFirst.Text != "" && txtBxSecond.Text != "")
+            {
+                if (calcList.SelectedIndex == 0)
+                {
+                    result.Text = (Double.Parse(txtBxFirst.Text) / Double.Parse(txtBxSecond.Text) * 100).ToString();
+                }
+                else if (calcList.SelectedIndex == 1)
+                {
+                    result.Text = (Double.Parse(txtBxFirst.Text) * 100 / Double.Parse(txtBxSecond.Text)).ToString();
+                }
+                else
+                {
+                    result.Text = (Double.Parse(txtBxFirst.Text) * Double.Parse(txtBxSecond.Text) / 100).ToString();
+                }
+
+            }
+        }
+
+        private void TxtBxSecond_KeyDown(object sender, KeyEventArgs e)
+        {
+            nonNumberEntered = false;
+
+            if (e.KeyCode < Keys.D0 || e.KeyCode > Keys.D9)
+            {
+                if (e.KeyCode < Keys.NumPad0 || e.KeyCode > Keys.NumPad9)
+                {
+                    if (e.KeyCode != Keys.Back)
+                    {
+                        if (e.KeyCode != Keys.Oemcomma || (sender as TextBox).Text.IndexOf(',') > -1 || ((sender as TextBox).Text.Length == 0 && e.KeyCode == Keys.Oemcomma))
+                            nonNumberEntered = true;
+                    }
+                }
+            }
+            if (Control.ModifierKeys == Keys.Shift)
+            {
+                nonNumberEntered = true;
+            }
+        }
+
+        private void TxtBxFirst_KeyDown(object sender, KeyEventArgs e)
+        {
+
+            nonNumberEntered = false;
+
+            if (e.KeyCode < Keys.D0 || e.KeyCode > Keys.D9)
+            {
+                if (e.KeyCode < Keys.NumPad0 || e.KeyCode > Keys.NumPad9)
+                {
+                    if (e.KeyCode != Keys.Back)
+                    {
+                        if (e.KeyCode != Keys.Oemcomma || (sender as TextBox).Text.IndexOf(',') > -1 || ((sender as TextBox).Text.Length == 0 && e.KeyCode == Keys.Oemcomma))
+                        {
+                            if (e.Control == true || e.Modifiers == Keys.Control)
+                                e.Handled = true;
+                            nonNumberEntered = true;
+                        }
+                    }
+                }
+            }
+            if (Control.ModifierKeys == Keys.Shift)
+            {
+                nonNumberEntered = true;
+            }
+        }
+
+
+
+
+        private void calclist_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (calcList.SelectedIndex == 0)
+            {
+                litres_L.Visible = true;
+                consumption_L.Visible = true;
+                distance_L.Visible = false;
+            }
+            else if (calcList.SelectedIndex == 1)
+            {
+                consumption_L.Visible = false;
+                litres_L.Visible = true;
+                distance_L.Location = new Point(consumption_L.Location.X, consumption_L.Location.Y);
+                distance_L.Visible = true;
+            }
+            else
+            {
+                litres_L.Visible = false;
+                consumption_L.Visible = true;
+                distance_L.Location = new Point(litres_L.Location.X, litres_L.Location.Y);
+                distance_L.Visible = true;
+            }
+        }
+
         Label lChoose;
         Label litres_L;
         Label consumption_L;
